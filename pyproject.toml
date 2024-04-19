@@ -23,6 +23,7 @@ classifiers=[
 ]
 
 dependencies = [
+    "requests",
     "geopandas >= 0.14.0",
     "pandas >= 2.2.0",
     "matplotlib >= 3.0.0",
