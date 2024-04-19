@@ -5,16 +5,16 @@ pyhms User's Guide
 ===================
 
 `pyhms` is a python tool to plots of HMS products from NOAA. This is a
-very simple wrapper around geopandas, and is mostly a way for me to share
-the tools that I have in a more systematic way.
+very simple wrapper around geopandas, and is mostly a way to share
+the tools for HMS in a systematic way.
 
 
 Getting Started
 ---------------
 
 The best way to get started is to install (see below) and then explore the
-:doc:`auto_examples/index`. The examples include data download, processing,
-and create summaries of the data (figures and tables).
+:doc:`auto_examples/index`. The example includes data download, processing,
+and figure creation.
 
 
 Installation
