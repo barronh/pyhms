@@ -6,7 +6,7 @@ pyhms has the ability to download, open, and plot HMS products. At this time, on
 
 The examples assume that you have installed pyhms:
 
-.. code-block::bash
+.. code-block:: bash
 
     python -m pip install git+https://github.com/barronh/pyhms.git
 

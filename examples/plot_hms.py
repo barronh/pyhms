@@ -8,6 +8,8 @@ This example shows how to create a plot from one day of HMS smoke."""
 # %%
 # Prepare a base api object
 # -------------------------
+
+# !python -m pip install git+https://github.com/barronh/pyhms.git
 import pyhms
 
 hms = pyhms.hmsapi()
