@@ -1,0 +1,30 @@
+[project]
+name = "pyhms"
+authors = [
+  {email = "barronh@gmail.com"},
+  {name = "Barron H. Henderson"}
+]
+description = "Python plotting package"
+readme = "README.md"
+license = { file = "LICENSE/LICENSE" }
+dynamic = ["version"]
+classifiers=[
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Visualization",
+]
+
+dependencies = [
+    "geopandas >= 0.14.0",
+    "pandas >= 2.2.0",
+    "matplotlib >= 3.0.0",
+]
+requires-python = ">=3.9"
