@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyhms &#8212; pyhms 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/design-tabs.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for pyhms</h1><div class="highlight"><pre>
+<span></span><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;hmsapi&#39;</span><span class="p">,</span> <span class="s1">&#39;plot_smoke&#39;</span><span class="p">]</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.1.0&#39;</span>
+<span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Overview</span>
+<span class="s2">========</span>
+<span class="s2">pyhms helps to download and create plots of NOAA&#39;s HMS products in python.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">importlib.metadata</span> <span class="kn">import</span> <span class="n">version</span><span class="p">,</span> <span class="n">PackageNotFoundError</span>
+
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">__version__</span> <span class="o">=</span> <span class="n">version</span><span class="p">(</span><span class="s1">&#39;pyhms&#39;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">PackageNotFoundError</span><span class="p">:</span>
+    <span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.0.0&#39;</span>
+
+<span class="n">_stateroot</span> <span class="o">=</span> <span class="s1">&#39;https://www2.census.gov/geo/tiger/GENZ2022/shp&#39;</span>
+<span class="n">_stateurl</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">_stateroot</span><span class="si">}</span><span class="s1">/cb_2022_us_state_500k.zip&#39;</span>
+
+
+<div class="viewcode-block" id="plot_smoke"><a class="viewcode-back" href="../api/pyhms.html#pyhms.plot_smoke">[docs]</a><span class="k">def</span> <span class="nf">plot_smoke</span><span class="p">(</span><span class="n">hmsf</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">statepath</span><span class="o">=</span><span class="s1">&#39;cb_2022_us_state_500k.zip&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    hmsf : geopandas.GeoDataFrame or str</span>
+<span class="sd">        If dataframe, should be data from HMS product.</span>
+<span class="sd">        If str, should be a path to a HMS file.</span>
+<span class="sd">    ax : matplotlib.axes.Axes</span>
+<span class="sd">        Axes to plot on. If None is given, one will be created.</span>
+<span class="sd">    statepath : str</span>
+<span class="sd">        Path to state boundaries for plotting. If None, states will not be</span>
+<span class="sd">        added. If provided and not on disk, US Census 2022 states 500k will</span>
+<span class="sd">        be downloaded.</span>
+<span class="sd">    kwds : mappable</span>
+<span class="sd">        Additional kwds will be passed to hmsf.plot and affect polygons.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ax : matplotlib.axes.Axes</span>
+<span class="sd">        Axes with plot</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    .. code-block::python</span>
+
+<span class="sd">        import pyhms</span>
+<span class="sd">        hms = pyhms.hmsapi()</span>
+<span class="sd">        hmsf = hms.open(&#39;2023-06-14&#39;)</span>
+<span class="sd">        ax = pyhms.plot_smoke(hmsf)</span>
+<span class="sd">        ax.figure.savefig(&#39;hms_smoke.png&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">mc</span>
+    <span class="kn">import</span> <span class="nn">requests</span>
+    <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">exists</span>
+
+    <span class="n">levels</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">]</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">]</span>
+    <span class="n">cmap</span><span class="p">,</span> <span class="n">norm</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">from_levels_and_colors</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">colors</span><span class="p">)</span>
+    <span class="n">cats</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Light&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Medium&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Heavy&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hmsf</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">hmsf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">hmsf</span><span class="p">)</span>
+
+    <span class="n">DensityNum</span> <span class="o">=</span> <span class="n">hmsf</span><span class="p">[</span><span class="s1">&#39;Density&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">cats</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">hmsf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DensityNum</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">figure</span>
+    <span class="n">cb</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ticks</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+    <span class="n">cb</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;Light&#39;</span><span class="p">,</span> <span class="s1">&#39;Medium&#39;</span><span class="p">,</span> <span class="s1">&#39;Heavy&#39;</span><span class="p">],</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span>
+    <span class="p">)</span>
+    <span class="n">xlim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+    <span class="n">ylim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+    <span class="n">plotstates</span> <span class="o">=</span> <span class="n">statepath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">plotstates</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">(</span><span class="n">statepath</span><span class="p">):</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_stateurl</span><span class="p">)</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">statepath</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outf</span><span class="p">:</span>
+                <span class="n">outf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+        <span class="n">stf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">statepath</span><span class="p">)</span>
+        <span class="n">stf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">xlim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="hmsapi"><a class="viewcode-back" href="../api/pyhms.html#pyhms.hmsapi">[docs]</a><span class="k">class</span> <span class="nc">hmsapi</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        root : str</span>
+<span class="sd">            Optional, specify the url where NOAA hosts HMS files.</span>
+<span class="sd">            Default https://satepsanone.nesdis.noaa.gov/pub/FIRE/web/HMS</span>
+<span class="sd">        cache : str</span>
+<span class="sd">            Place to cache HMS files.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="s1">&#39;https://satepsanone.nesdis.noaa.gov/pub/FIRE/web/HMS&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="n">cache</span>
+
+<div class="viewcode-block" id="hmsapi.open"><a class="viewcode-back" href="../api/pyhms.html#pyhms.hmsapi.open">[docs]</a>    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">prod</span><span class="o">=</span><span class="s1">&#39;smoke&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        date : pandas.Datetime</span>
+<span class="sd">            A date or dates to process.</span>
+<span class="sd">        prod : str</span>
+<span class="sd">            smoke, fire</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        hmsf : geopands.GeoDataFrame</span>
+<span class="sd">            File opened from local download.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        .. code-block::python</span>
+
+<span class="sd">            import pyhms</span>
+<span class="sd">            hms = pyhms.hmsapi()</span>
+<span class="sd">            hmsf = hms.open(&#39;2023-06-14&#39;)</span>
+<span class="sd">            print(hmsf.shape)</span>
+<span class="sd">            # (69, 5)</span>
+<span class="sd">            print(hmsf.columns)</span>
+<span class="sd">            # Index([&#39;Satellite&#39;, &#39;Start&#39;, &#39;End&#39;, &#39;Density&#39;, &#39;geometry&#39;],</span>
+<span class="sd">            #       dtype=&#39;object&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+        <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+        <span class="n">localpaths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">prod</span><span class="o">=</span><span class="n">prod</span><span class="p">)</span>
+        <span class="n">hmsfs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">localpath</span> <span class="ow">in</span> <span class="n">localpaths</span><span class="p">:</span>
+            <span class="n">hmsf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">localpath</span><span class="p">)</span>
+            <span class="n">hmsfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hmsf</span><span class="p">)</span>
+        <span class="n">hmsf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">hmsfs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">hmsf</span></div>
+
+<div class="viewcode-block" id="hmsapi.download"><a class="viewcode-back" href="../api/pyhms.html#pyhms.hmsapi.download">[docs]</a>    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">prod</span><span class="o">=</span><span class="s1">&#39;smoke&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        date : pandas.Datetime</span>
+<span class="sd">            A date or dates to process.</span>
+<span class="sd">        prod : str</span>
+<span class="sd">            smoke, fire</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        outpaths : list</span>
+<span class="sd">            List of outpaths</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        .. code-block::python</span>
+
+<span class="sd">            import pyhms</span>
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            hms = pyhms.hmsapi()</span>
+<span class="sd">            dates = pd.date_range(&#39;2023-06-14&#39;, &#39;2023-06-16&#39;)</span>
+<span class="sd">            outpaths = hms.download(dates)</span>
+<span class="sd">            print(len(outpaths), outpaths[0])</span>
+<span class="sd">            # 3 ./2023/06/hms_smoke20230614.zip</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span>
+        <span class="kn">import</span> <span class="nn">requests</span>
+        <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">exists</span>
+        <span class="kn">import</span> <span class="nn">os</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="p">[</span><span class="n">date</span><span class="p">]</span>
+
+        <span class="n">outpaths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">dt</span> <span class="ow">in</span> <span class="n">date</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">prod</span><span class="o">=</span><span class="n">prod</span><span class="p">)</span>
+            <span class="n">dest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_local</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">prod</span><span class="o">=</span><span class="n">prod</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">exists</span><span class="p">(</span><span class="n">dest</span><span class="p">):</span>
+                <span class="n">outpaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="n">destdir</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">destdir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outf</span><span class="p">:</span>
+                <span class="n">outf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+            <span class="n">outpaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">outpaths</span></div>
+
+<div class="viewcode-block" id="hmsapi.get_local"><a class="viewcode-back" href="../api/pyhms.html#pyhms.hmsapi.get_local">[docs]</a>    <span class="k">def</span> <span class="nf">get_local</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">prod</span><span class="o">=</span><span class="s1">&#39;smoke&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the local path even if it does not exist.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        date : pandas.Datetime</span>
+<span class="sd">            A date to process.</span>
+<span class="sd">        prod : str</span>
+<span class="sd">            smoke, fire</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        localpath : str</span>
+<span class="sd">            Local file path</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        .. code-block::python</span>
+
+<span class="sd">            import pyhms</span>
+<span class="sd">            hms = pyhms.hmsapi()</span>
+<span class="sd">            localpath = hms.get_local(&#39;2023-06-14&#39;)</span>
+<span class="sd">            print(localpath)</span>
+<span class="sd">            # ./2023/06/hms_smoke20230614.zip</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">basename</span><span class="p">,</span> <span class="n">join</span>
+        <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">prod</span><span class="o">=</span><span class="n">prod</span><span class="p">)</span>
+        <span class="n">destdir</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="si">}</span><span class="s1">/%Y/%m&#39;</span><span class="p">)</span>
+        <span class="n">dest</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">destdir</span><span class="p">,</span> <span class="n">basename</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">dest</span></div>
+
+<div class="viewcode-block" id="hmsapi.get_url"><a class="viewcode-back" href="../api/pyhms.html#pyhms.hmsapi.get_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">prod</span><span class="o">=</span><span class="s1">&#39;smoke&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        date : pandas.Datetime</span>
+<span class="sd">            A date to process.</span>
+<span class="sd">        prod : str</span>
+<span class="sd">            smoke, fire</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        url : str</span>
+<span class="sd">            Url to download</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        .. code-block::python</span>
+
+<span class="sd">            import pyhms</span>
+<span class="sd">            hms = pyhms.hmsapi()</span>
+<span class="sd">            url = hms.get_url(&#39;2023-06-14&#39;)</span>
+<span class="sd">            print(url)</span>
+<span class="sd">            # https://satepsanone.nesdis.noaa.gov/pub/FIRE/web/HMS/</span>
+<span class="sd">            #         Smoke_Polygons/Shapefile/2023/06/hms_smoke20230614.zip</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span>
+        <span class="k">if</span> <span class="n">prod</span> <span class="o">==</span> <span class="s1">&#39;smoke&#39;</span><span class="p">:</span>
+            <span class="n">tmpl</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">root</span><span class="si">}</span><span class="s1">/Smoke_Polygons/Shapefile/%Y/%m/hms_smoke%Y%m%d.zip&#39;</span>
+        <span class="k">elif</span> <span class="n">prod</span> <span class="o">==</span> <span class="s1">&#39;fire&#39;</span><span class="p">:</span>
+            <span class="n">tmpl</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">root</span><span class="si">}</span><span class="s1">/Fire_Points/Shapefile/%Y/%m/hms_fire%Y%m%d.zip&#39;</span>
+
+        <span class="k">return</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">tmpl</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pyhms</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">pyhms User’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">pyhms Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/pyhms.html">pyhms package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">pyhms</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Barron H. Henderson.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.0.1</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

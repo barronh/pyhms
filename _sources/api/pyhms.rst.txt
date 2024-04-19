@@ -1,0 +1,18 @@
+pyhms package
+=============
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   pyhms.tests
+
+Module contents
+---------------
+
+.. automodule:: pyhms
+   :members:
+   :undoc-members:
+   :show-inheritance:

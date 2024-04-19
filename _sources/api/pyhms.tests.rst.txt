@@ -1,0 +1,21 @@
+pyhms.tests package
+===================
+
+Submodules
+----------
+
+pyhms.tests.test\_main module
+-----------------------------
+
+.. automodule:: pyhms.tests.test_main
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyhms.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:

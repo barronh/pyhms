@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyhms.tests.test_main &#8212; pyhms 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for pyhms.tests.test_main</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="test_url"><a class="viewcode-back" href="../../../api/pyhms.tests.html#pyhms.tests.test_main.test_url">[docs]</a><span></span><span class="k">def</span> <span class="nf">test_url</span><span class="p">():</span>
+    <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">hmsapi</span>
+    <span class="n">hms</span> <span class="o">=</span> <span class="n">hmsapi</span><span class="p">()</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">hms</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="s1">&#39;2023-06-14&#39;</span><span class="p">)</span>
+    <span class="n">chkurl</span> <span class="o">=</span> <span class="s1">&#39;https://satepsanone.nesdis.noaa.gov/pub/FIRE/web/HMS&#39;</span>
+    <span class="n">chkurl</span> <span class="o">+=</span> <span class="s1">&#39;/Smoke_Polygons/Shapefile/2023/06/hms_smoke20230614.zip&#39;</span>
+    <span class="k">assert</span> <span class="n">url</span> <span class="o">==</span> <span class="n">chkurl</span></div>
+
+
+<div class="viewcode-block" id="test_local"><a class="viewcode-back" href="../../../api/pyhms.tests.html#pyhms.tests.test_main.test_local">[docs]</a><span class="k">def</span> <span class="nf">test_local</span><span class="p">():</span>
+    <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">hmsapi</span>
+    <span class="n">hms</span> <span class="o">=</span> <span class="n">hmsapi</span><span class="p">()</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">hms</span><span class="o">.</span><span class="n">get_local</span><span class="p">(</span><span class="s1">&#39;2023-06-14&#39;</span><span class="p">)</span>
+    <span class="n">chkurl</span> <span class="o">=</span> <span class="s1">&#39;./2023/06/hms_smoke20230614.zip&#39;</span>
+    <span class="k">assert</span> <span class="n">url</span> <span class="o">==</span> <span class="n">chkurl</span></div>
+
+
+<div class="viewcode-block" id="test_download"><a class="viewcode-back" href="../../../api/pyhms.tests.html#pyhms.tests.test_main.test_download">[docs]</a><span class="k">def</span> <span class="nf">test_download</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">tempfile</span>
+    <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">hmsapi</span>
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">td</span><span class="p">:</span>
+        <span class="n">hms</span> <span class="o">=</span> <span class="n">hmsapi</span><span class="p">(</span><span class="n">cache</span><span class="o">=</span><span class="n">td</span><span class="p">)</span>
+        <span class="n">outpaths</span> <span class="o">=</span> <span class="n">hms</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;2023-06-14&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">outpaths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="test_open"><a class="viewcode-back" href="../../../api/pyhms.tests.html#pyhms.tests.test_main.test_open">[docs]</a><span class="k">def</span> <span class="nf">test_open</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">tempfile</span>
+    <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">hmsapi</span>
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">td</span><span class="p">:</span>
+        <span class="n">hms</span> <span class="o">=</span> <span class="n">hmsapi</span><span class="p">(</span><span class="n">cache</span><span class="o">=</span><span class="n">td</span><span class="p">)</span>
+        <span class="n">hmsf</span> <span class="o">=</span> <span class="n">hms</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;2023-06-14&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="s1">&#39;Density&#39;</span> <span class="ow">in</span> <span class="n">hmsf</span><span class="o">.</span><span class="n">columns</span></div>
+
+
+<div class="viewcode-block" id="test_plot_smoke"><a class="viewcode-back" href="../../../api/pyhms.tests.html#pyhms.tests.test_main.test_plot_smoke">[docs]</a><span class="k">def</span> <span class="nf">test_plot_smoke</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">tempfile</span>
+    <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">hmsapi</span><span class="p">,</span> <span class="n">plot_smoke</span>
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">td</span><span class="p">:</span>
+        <span class="n">hms</span> <span class="o">=</span> <span class="n">hmsapi</span><span class="p">(</span><span class="n">cache</span><span class="o">=</span><span class="n">td</span><span class="p">)</span>
+        <span class="n">hmsf</span> <span class="o">=</span> <span class="n">hms</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;2023-06-14&#39;</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_smoke</span><span class="p">(</span><span class="n">hmsf</span><span class="p">,</span> <span class="n">statepath</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">td</span><span class="si">}</span><span class="s1">/states.zip&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">collections</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">pyhms</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">pyhms User’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">pyhms Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/pyhms.html">pyhms package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">pyhms</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  <li><a href="../../pyhms.html">pyhms</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Barron H. Henderson.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.0.1</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
